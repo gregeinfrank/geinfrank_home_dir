@@ -1,6 +1,6 @@
 [submodule "emacs/pbcopy"]
 	path = emacs/pbcopy
-	url = git@github.com:emacsmirror/pbcopy.git
+	url = https://github.com/emacsmirror/pbcopy.git
 [submodule "emacs/magit"]
 	path = emacs/magit
 	url = git@github.com:magit/magit.git
