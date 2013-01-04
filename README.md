@@ -1,4 +1,4 @@
 geinfrank_home_dir
 ==================
 
-Home directory goodies
+Home directory goodies - take two
