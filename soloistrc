@@ -11,3 +11,4 @@ env_variable_switches:
     vagrant:
       recipes:
         - workstation::venmo_vagrant
+

@@ -1,10 +1,111 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Specify my elisp lib dir
-(add-to-list 'load-path "~/.emacs.d/")
+;;;;;;;;;;;;
+;;;;;BEGIN GEINFRANK
+;;;;;;;;;;;
+
+(setq load-path (append load-path '("/Users/gregoryeinfrank/.emacs.d")))
+
+(require 'autopair)
+(autopair-global-mode)
+(require 'hide-lines)
+(autoload 'ido "ido" t)
+  (ido-mode t)
+  (setq ido-enable-flex-matching t) ;; enable fuzzy matching
+(require 'grep-edit)
+
+;; Put autosave files (ie #foo#) in one place, *not*
+  ;; scattered all over the file system!
+  (defvar autosave-dir "~/emacs_autosaves/") 
+
+  (make-directory autosave-dir t)
+
+  (defun auto-save-file-name-p (filename)
+    (string-match "^#.*#$" (file-name-nondirectory filename)))
+
+  (defun make-auto-save-file-name ()
+    (concat autosave-dir
+            (if buffer-file-name
+                (concat "#" (file-name-nondirectory buffer-file-name) "#")
+              (expand-file-name
+               (concat "#%" (buffer-name) "#")))))
+
+  ;; Put backup files (ie foo~) in one place too. (The backup-directory-alist
+  ;; list contains regexp=>directory mappings; filenames matching a regexp are
+  ;; backed up in the corresponding directory. Emacs will mkdir it if necessary.)
+  (defvar backup-dir "~/emacs_backups/")
+  (setq backup-directory-alist (list (cons "." backup-dir)))
+
+;; Turn the menu off
+(menu-bar-mode nil)
+;; Turn the tool bar off
+;;(tool-bar-mode nil)
+(setq inhibit-startup-message t)
+
+(set-default 'truncate-lines t) ;;don't wrap lines 
+(require 'paren)
+(show-paren-mode 1)
+(custom-set-faces
+ '(show-paren-match-face ((((class color)) (:foreground "white" :background "steelblue3"))))
+ '(show-paren-mismatch-face ((((class color)) (:foreground "white" :background "darkred")))))
+
+;; Make delete key work correctly
+(global-set-key [delete] 'delete-char)
+
+;; cycle through buffers with Ctrl-Tab (like Firefox)
+(global-set-key (kbd "<C-tab>") 'other-window)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; make sure that marked text is highlighted
-(transient-mark-mode t)
+(setq transient-mark-mode 1)
+
+;; Colors
+;;(add-to-list 'load-path "/Users/gregoryeinfrank/.emacs.d/color-theme.el/file")
+;;(require 'color-theme)
+;;(eval-after-load "color-theme"
+;;  '(progn
+;;     (color-theme-initialize)
+;;     (color-theme-desert)))
+
+;; TODO: on a mac now, might want to change this
+;; set F7 for goto line
+(global-set-key [f7] 'goto-line)
+;; set F5 for starting a shell
+(global-set-key [f5] 'shell)
+;; set F6 for query replace
+(global-set-key [f6] 'query-replace)
+
+(defun refresh-file ()
+  (interactive)
+  (revert-buffer t t t)
+  )
+
+(global-set-key [f9] 'refresh-file)
+
+;; shell stuff
+;; Maps up and down arrow in emacs shell mode to bring back previous commands
+(add-hook 'shell-mode-hook
+	    '(lambda ()
+	            (define-key shell-mode-map [up] 'comint-previous-input)
+		         (define-key shell-mode-map [down] 'comint-next-input)
+			      )
+	      )
+(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on) ;;junk chars in shell
+
+(custom-set-variables
+  ;; custom-set-variables was added by Custom -- don't edit or cut/paste it!
+  ;; Your init file should contain only one such instance.
+ '(auto-compression-mode t nil (jka-compr))
+ '(case-fold-search t)
+ '(current-language-environment "English")
+ '(global-font-lock-mode t nil (font-lock))
+ '(show-paren-mode t nil (paren)))
+(custom-set-faces
+  ;; custom-set-faces was added by Custom -- don't edit or cut/paste it!
+  ;; Your init file should contain only one such instance.
+ )
+
+;;;;;;;;;;;;
+;;BEGIN DELANO
+;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; follow symlinks to version controlled files without confirmation
@@ -63,9 +164,9 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; I like tabs of 4 chars
-(custom-set-variables '(tab-width 4))
+;;(custom-set-variables '(tab-width 4))
 ;; tab key adds 4 characters
-(setq default-tab-width 4)
+;;(setq default-tab-width 4)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; use only spaces, no tab charaters
@@ -149,7 +250,3 @@
 (setq whitespace-trailing whitespace-line)
 ;; cleanup whitespace in buffer
 (global-set-key (kbd "\C-c w") 'whitespace-cleanup)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; disable menubar
-(menu-bar-mode -1)

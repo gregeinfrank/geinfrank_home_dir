@@ -10,3 +10,4 @@ alias venmo_slave_tunnels="/vagrant_data/venmo-data-science/util/create_slave_tu
 alias venmo_dash_server_slaves="cd /ebs/appvenmo && export DJANGO_SETTINGS_MODULE=settings_reporting_slaves && /ebs/venmo-ve/bin/ipython -- /ebs/appvenmo/dashboard/main.py --port=7001"
 alias venmo_shell_slaves="cd /ebs/appvenmo && export APPROOT=/ebs/appvenmo && export PYTHONPATH=/ebs/appvenmo:/ebs/venmo-data-science && export DJANGO_SETTINGS_MODULE=settings_reporting_slaves && ipython --pdb manage.py shell -- --settings=settings_reporting_slaves"
 
+

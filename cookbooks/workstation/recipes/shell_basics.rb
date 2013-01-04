@@ -1,4 +1,4 @@
-# take care of sprucing up shell stuff
+# take care of sprucing up shell stuff 
 dotfiles_path = File.expand_path(File.dirname(__FILE__)+"../../../..") # a few levels up from this file
 
 # screenrc

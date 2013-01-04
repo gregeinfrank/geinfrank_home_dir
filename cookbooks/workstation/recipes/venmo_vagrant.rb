@@ -1,4 +1,4 @@
-dotfiles_path = File.expand_path(File.dirname(__FILE__)+"../../../..") # a few levels up from this file
+dotfiles_path = File.expand_path(File.dirname(__FILE__)+"../../../..") # a few levels up from this file 
 
 # make sure that my additional shell setup is run
 execute "Add dot_bash_profile to .bash_profile" do

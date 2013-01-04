@@ -1,4 +1,4 @@
-dotfiles_path = File.expand_path(File.dirname(__FILE__)+"../../../..") # a few levels up from this file
+dotfiles_path = File.expand_path(File.dirname(__FILE__)+"../../../..") # a few levels up from this file 
 
 # make sure emacs is installed
 package "emacs" do

@@ -1,3 +1,27 @@
+# Chef assumes that it owns this file.
+# Additions to bash should be placed into /Users/gregoryeinfrank/.bash_profile_includes with a .sh extension
+
+for file in ~/.bash_profile_includes/*.sh; do
+  [[ -r $file ]] && source $file;
+done
+
+if [ -f ~/venmo-devops/venmo_host_aliases ]; then
+   source ~/venmo-devops/venmo_host_aliases
+fi
+
+if [ -f ~/.bashrc ]; then
+    source ~/.bashrc
+fi
+
+export PS1="[\w]$ "
+
+export PATH=/usr/local/bin:$PATH
+
+# Git Aware Prompt exposes git info like current branch name etc
+export GITAWAREPROMPT=~/.bash/git-aware-prompt
+source $GITAWAREPROMPT/main.sh
+export PS1="\w\[$txtcyn\]\$git_branch\[$txtylw\]\$git_dirty\[$txtrst\]\$ "
+
 LSCOLORS=hxfxcxdxbxhghdabagacad
 export LSCOLORS
 
@@ -20,3 +44,5 @@ if [ `uname` = "Darwin" ]; then
 fi
 
 alias venmo_rebuild_tags="cd ~/working/venmo-devops && find . -name '*.py' | etags --output tags -"
+
+
