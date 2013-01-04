@@ -1,19 +1,22 @@
 dotfiles_path = File.expand_path(File.dirname(__FILE__)+"../../../..") # a few levels up from this file 
 
 # make sure emacs is installed
-package "emacs" do
-  action :install
-end
+#execute "emacs" do
+#	command "brew install emacs"
+#	action :run
+#end
 
 # TODO must come from gem or easy_install on osx
-package "pyflakes" do
-  action :install
-end
+#execute "pyflakes" do
+#	command "brew install pyflakes"
+#	action :run
+#end
 
 # TODO must come from gem or easy_install on osx
-package "pep8" do
-  action :install
-end
+#execute "pep8" do
+#	command "brew install pep8"
+#	action :run
+#end
 
 # link dot emacs
 link "#{ENV['HOME']}/.emacs" do

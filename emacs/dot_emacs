@@ -2,7 +2,7 @@
 ;;;;;BEGIN GEINFRANK
 ;;;;;;;;;;;
 
-(setq load-path (append load-path '("/Users/gregoryeinfrank/.emacs.d")))
+(setq load-path (append load-path '("~/.emacs.d")))
 
 (require 'autopair)
 (autopair-global-mode)
