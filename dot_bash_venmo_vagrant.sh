@@ -1,6 +1,6 @@
 # add this to it
-export VGIT_USERNAME=delano
-export EDITOR=vi
+export VGIT_USERNAME=gregeinfrankvenmo
+export EDITOR=emacs
 
 PS_BLUE="\[\e[34;1m\]"
 PS_GRAY="\[\e[30;1m\]"
