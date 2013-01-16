@@ -11,7 +11,7 @@
   (ido-mode t)
   (setq ido-enable-flex-matching t) ;; enable fuzzy matching
 (require 'grep-edit)
-
+(require 'js-beautify)
 ;; Put autosave files (ie #foo#) in one place, *not*
   ;; scattered all over the file system!
   (defvar autosave-dir "~/emacs_autosaves/") 
@@ -196,9 +196,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; save my desktop, and ignore some types, files are 
 ;; specified using regular expressions, \\ is needed to escape
-(desktop-save-mode 1)
-(setq desktop-buffers-not-to-save
-      (concat "\\COMMIT_EDITMSG\\'")) ;; Ignore git commit messages
+;;(desktop-save-mode 1)
+;;(setq desktop-buffers-not-to-save
+;;      (concat "\\COMMIT_EDITMSG\\'")) ;; Ignore git commit messages
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; map some files to their mode
@@ -207,24 +207,24 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; flymake for python
-(when (load "flymake" t)
-  (defun flymake-pyflakes-init ()
-    (let* ((temp-file (flymake-init-create-temp-buffer-copy
-                       'flymake-create-temp-copy)))
-    (list "~/.emacs.d/pycheckers.sh" (list temp-file))))
-  ;; only process python files
-  (add-to-list 'flymake-allowed-file-name-masks
-               '("\\.py\\'" flymake-pyflakes-init))
-)
+;; (when (load "flymake" t)
+;;   (defun flymake-pyflakes-init ()
+;;     (let* ((temp-file (flymake-init-create-temp-buffer-copy
+;;                        'flymake-create-temp-copy)))
+;;     (list "~/.emacs.d/pycheckers.sh" (list temp-file))))
+;;   ;; only process python files
+;;   (add-to-list 'flymake-allowed-file-name-masks
+;;                '("\\.py\\'" flymake-pyflakes-init))
+;; )
 
-(add-hook 'find-file-hook 'flymake-find-file-hook)
-;; make sure the working directory is the same as the temp file
-(setq flymake-run-in-place nil)
-(setq temporary-file-directory "~/.emacs.d/tmp/")
-;; (setq flymake-log-level 3)
-(global-set-key [f10] 'flymake-goto-prev-error)
-(global-set-key [f11] 'flymake-goto-next-error)
-(require 'flymake-cursor)
+;; (add-hook 'find-file-hook 'flymake-find-file-hook)
+;; ;; make sure the working directory is the same as the temp file
+;; (setq flymake-run-in-place nil)
+;; (setq temporary-file-directory "~/.emacs.d/tmp/")
+;; ;; (setq flymake-log-level 3)
+;; (global-set-key [f10] 'flymake-goto-prev-error)
+;; (global-set-key [f11] 'flymake-goto-next-error)
+;; (require 'flymake-cursor)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; no flymake for html
@@ -232,9 +232,9 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; AUTOCOMPLETE
-(require 'auto-complete-config)
-(add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
-(ac-config-default)
+;;(require 'auto-complete-config)
+;;(add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
+;;(ac-config-default)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; magit (for git support)
@@ -242,11 +242,11 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; whitespace customizations
-(require 'whitespace)
-(global-whitespace-mode 1)
-(setq whitespace-style '(face empty trailing lines whitespace-line-column))
-(setq whitespace-line-column 100)
-;; make whitespace trailing the same as whitespace line
-(setq whitespace-trailing whitespace-line)
+;;(require 'whitespace)
+;;(global-whitespace-mode 1)
+;;(setq whitespace-style '(face empty trailing lines whitespace-line-column))
+;;(setq whitespace-line-column 100)
+;;;; make whitespace trailing the same as whitespace line
+;;(setq whitespace-trailing whitespace-line)
 ;; cleanup whitespace in buffer
-(global-set-key (kbd "\C-c w") 'whitespace-cleanup)
+;;(global-set-key (kbd "\C-c w") 'whitespace-cleanup)
