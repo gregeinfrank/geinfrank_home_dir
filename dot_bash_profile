@@ -48,3 +48,7 @@ alias venmo_rebuild_tags="cd ~/working/venmo-devops && find . -name '*.py' | eta
 alias e="emacs -nw"
 alias cdd="cd ~/venmo-devops"
 alias cdp="cd ~/venmo-devops/venmo-platform"
+alias mysql=/usr/local/mysql/bin/mysql
+alias mysqladmin=/usr/local/mysql/bin/mysqladmin
+alias gitdel="perl ~/delete_branch.pl"
+git config --global color.diff always

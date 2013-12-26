@@ -4,7 +4,11 @@
 
 (setq load-path (append load-path '("~/.emacs.d")))
 
+;(require 'flymake)
 (require 'autopair)
+(require 'tree-mode)
+(require 'windata)
+;(require 'dirtree)
 (autopair-global-mode)
 (require 'hide-lines)
 (autoload 'ido "ido" t)
@@ -12,35 +16,37 @@
   (setq ido-enable-flex-matching t) ;; enable fuzzy matching
 (require 'grep-edit)
 (require 'js-beautify)
-;; Put autosave files (ie #foo#) in one place, *not*
+  ;; Put autosave files (ie #foo#) in one place, *not*
   ;; scattered all over the file system!
-  (defvar autosave-dir "~/emacs_autosaves/") 
+(defvar autosave-dir "~/emacs_autosaves/") 
+(make-directory autosave-dir t)
 
-  (make-directory autosave-dir t)
+(defun auto-save-file-name-p (filename)
+  (string-match "^#.*#$" (file-name-nondirectory filename)))
 
-  (defun auto-save-file-name-p (filename)
-    (string-match "^#.*#$" (file-name-nondirectory filename)))
+(defun make-auto-save-file-name ()
+  (concat autosave-dir
+          (if buffer-file-name
+              (concat "#" (file-name-nondirectory buffer-file-name) "#")
+            (expand-file-name
+             (concat "#%" (buffer-name) "#")))))
 
-  (defun make-auto-save-file-name ()
-    (concat autosave-dir
-            (if buffer-file-name
-                (concat "#" (file-name-nondirectory buffer-file-name) "#")
-              (expand-file-name
-               (concat "#%" (buffer-name) "#")))))
-
-  ;; Put backup files (ie foo~) in one place too. (The backup-directory-alist
-  ;; list contains regexp=>directory mappings; filenames matching a regexp are
-  ;; backed up in the corresponding directory. Emacs will mkdir it if necessary.)
-  (defvar backup-dir "~/emacs_backups/")
-  (setq backup-directory-alist (list (cons "." backup-dir)))
+;; Put backup files (ie foo~) in one place too. (The backup-directory-alist
+;; list contains regexp=>directory mappings; filenames matching a regexp are
+;; backed up in the corresponding directory. Emacs will mkdir it if necessary.)
+(defvar backup-dir "~/emacs_backups/")
+(setq backup-directory-alist (list (cons "." backup-dir)))
 
 ;; Turn the menu off
 (menu-bar-mode nil)
 ;; Turn the tool bar off
 ;;(tool-bar-mode nil)
+
+;; Turn off startup message
 (setq inhibit-startup-message t)
 
-(set-default 'truncate-lines t) ;;don't wrap lines 
+;; Don't wrap lines 
+(set-default 'truncate-lines t)
 (require 'paren)
 (show-paren-mode 1)
 (custom-set-faces
@@ -51,6 +57,7 @@
 (global-set-key [delete] 'delete-char)
 
 ;; cycle through buffers with Ctrl-Tab (like Firefox)
+;; WARNING this doesn't really work right now
 (global-set-key (kbd "<C-tab>") 'other-window)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -83,11 +90,11 @@
 ;; shell stuff
 ;; Maps up and down arrow in emacs shell mode to bring back previous commands
 (add-hook 'shell-mode-hook
-	    '(lambda ()
-	            (define-key shell-mode-map [up] 'comint-previous-input)
-		         (define-key shell-mode-map [down] 'comint-next-input)
-			      )
-	      )
+          '(lambda ()
+             (define-key shell-mode-map [up] 'comint-previous-input)
+             (define-key shell-mode-map [down] 'comint-next-input)
+             )
+          )
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on) ;;junk chars in shell
 
 (custom-set-variables
@@ -103,8 +110,57 @@
   ;; Your init file should contain only one such instance.
  )
 
+
+;; Move an entire region up and down (shifting regions like copy/paste)
+(defun move-region (start end n)
+  "Move the current region up or down by N lines."
+  (interactive "r\np")
+  (let ((line-text (delete-and-extract-region start end)))
+    (forward-line n)
+    (let ((start (point)))
+      (insert line-text)
+      (setq deactivate-mark nil)
+      (set-mark start))))
+
+(defun move-region-up (start end n)
+  "Move the current line up by N lines."
+  (interactive "r\np")
+  (move-region start end (if (null n) -1 (- n))))
+
+(defun move-region-down (start end n)
+  "Move the current line down by N lines."
+  (interactive "r\np")
+  (move-region start end (if (null n) 1 n)))
+
+(global-set-key (kbd "M-<up>") 'move-region-up)
+(global-set-key (kbd "M-<down>") 'move-region-up)
+
+;; move up/down 10 lines
+(global-set-key (kbd "M-n")
+    (lambda () (interactive) (next-line 10)))
+(global-set-key (kbd "M-p")
+    (lambda () (interactive) (next-line -10)))
+
+;; mo-git-blame
+(autoload 'mo-git-blame-file "mo-git-blame" nil t)
+(autoload 'mo-git-blame-current "mo-git-blame" nil t)
+
+;; import ipdb; ipdb.set_trace()
+(fset 'trace
+   (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ("	import ipdb; ipdb.set_trace()" 0 "%d")) arg)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; US and mustache template files should open in html mode
+(setq auto-mode-alist (cons '("\\.us$" . html-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.mustache$" . html-mode) auto-mode-alist))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; LESS files should open in CSS mode
+(setq auto-mode-alist (cons '("\\.less$" . css-mode) auto-mode-alist))
+
+
 ;;;;;;;;;;;;
-;;BEGIN DELANO
+;;Begin DELANO
 ;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -138,11 +194,11 @@
 (setq backup-by-copying-when-linked t) 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; highlight 100 characters on each line
+;; highlight 80 characters on each line
 (require 'fill-column-indicator)
 (setq fci-rule-width 1)
-(setq fci-rule-color "#000000")
-(setq-default fci-rule-column 100)
+(setq fci-rule-color "#dddddd")
+(setq-default fci-rule-column 80)
 (add-hook 'after-change-major-mode-hook 'fci-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -155,6 +211,7 @@
 ;; javascript
 (add-to-list 'auto-mode-alist '("\\.js\\'" . javascript-mode))
 (autoload 'javascript-mode "javascript" nil t)
+(setq js-indent-level 2)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; TRAMP
@@ -184,8 +241,8 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Highlight current line
-(global-hl-line-mode 1)
-(set-face-attribute hl-line-face nil :underline "white" :background "black")
+;; (global-hl-line-mode 1)
+;; (set-face-attribute hl-line-face nil :underline "white" :background "black")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; stop annoying me with the kill process on exit stuff
@@ -207,24 +264,37 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; flymake for python
-;; (when (load "flymake" t)
-;;   (defun flymake-pyflakes-init ()
-;;     (let* ((temp-file (flymake-init-create-temp-buffer-copy
-;;                        'flymake-create-temp-copy)))
-;;     (list "~/.emacs.d/pycheckers.sh" (list temp-file))))
-;;   ;; only process python files
-;;   (add-to-list 'flymake-allowed-file-name-masks
-;;                '("\\.py\\'" flymake-pyflakes-init))
-;; )
+(when (load "flymake" t)
+  (defun flymake-pyflakes-init ()
+    (let* ((temp-file (flymake-init-create-temp-buffer-copy
+                       'flymake-create-temp-inplace))) ;; this might have to change to flymake-create-temp-copy if using tramp because it'll be mad slow
+    (list "~/.emacs.d/pycheckers.sh" (list temp-file))))
+  ;; only process python files
+  (add-to-list 'flymake-allowed-file-name-masks
+               '("\\.py\\'" flymake-pyflakes-init))
+)
 
-;; (add-hook 'find-file-hook 'flymake-find-file-hook)
-;; ;; make sure the working directory is the same as the temp file
-;; (setq flymake-run-in-place nil)
-;; (setq temporary-file-directory "~/.emacs.d/tmp/")
-;; ;; (setq flymake-log-level 3)
-;; (global-set-key [f10] 'flymake-goto-prev-error)
-;; (global-set-key [f11] 'flymake-goto-next-error)
-;; (require 'flymake-cursor)
+(add-hook 'find-file-hook 'flymake-find-file-hook)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; flymake for javascript
+(require 'flymake-easy)
+(require 'flymake-jslint)
+(add-hook 'js-mode-hook 'flymake-jslint-load)
+
+
+;; make sure the working directory is the same as the temp file
+(setq flymake-run-in-place nil)
+(setq temporary-file-directory "~/.emacs.d/tmp/")
+(setq flymake-log-level 3)
+(global-set-key [f10] 'flymake-goto-prev-error)
+(global-set-key [f11] 'flymake-goto-next-error)
+(require 'flymake-cursor)
+
+;; flymake - underline errors/warnings rather than highlight
+(custom-set-faces
+ '(flymake-errline ((((class color)) (:underline "red"))))
+ '(flymake-warnline ((((class color) (background dark)) (:underline "yellow")))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; no flymake for html
@@ -250,3 +320,27 @@
 ;;(setq whitespace-trailing whitespace-line)
 ;; cleanup whitespace in buffer
 ;;(global-set-key (kbd "\C-c w") 'whitespace-cleanup)
+
+
+;;;;;; windmove (meta-arrows for swtiching windows)
+(global-set-key (kbd "C-c <left>")  'windmove-left)
+(global-set-key (kbd "C-c <right>") 'windmove-right)
+(global-set-key (kbd "C-c <up>")    'windmove-up)
+(global-set-key (kbd "C-c <down>")  'windmove-down)
+
+;; el-get
+(add-to-list 'load-path "~/.emacs.d/el-get/el-get")
+
+(unless (require 'el-get nil 'noerror)
+    (with-current-buffer
+            (url-retrieve-synchronously
+                     "https://raw.github.com/dimitri/el-get/master/el-get-install.el")
+                (let (el-get-master-branch)
+                        (goto-char (point-max))
+                              (eval-print-last-sexp))))
+
+(el-get 'sync)
+
+;; Jedi
+(setq jedi:setup-keys t)
+(add-hook 'python-mode-hook 'jedi:setup)
