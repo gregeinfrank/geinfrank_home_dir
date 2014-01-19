@@ -1,15 +1,13 @@
+;; el-get
 (add-to-list 'load-path "~/.emacs.d/el-get/el-get")
-
 (unless (require 'el-get nil 'noerror)
   (with-current-buffer
       (url-retrieve-synchronously
        "https://raw.github.com/dimitri/el-get/master/el-get-install.el")
     (goto-char (point-max))
     (eval-print-last-sexp)))
-
 (add-to-list 'el-get-recipe-path "~/.emacs.d/el-get-user/recipes")
 (el-get 'sync)
-
 
 ;; Turns the menu off
 (menu-bar-mode nil)
@@ -57,3 +55,32 @@
 
 ;; follow symlinks to version controlled files without confirmation
 (setq vc-follow-symlinks t)
+
+;; highlight 80 characters on each line - pep8
+(setq fci-rule-width 1)
+(setq fci-rule-color "#dddddd")
+(setq-default fci-rule-column 80)
+(add-hook 'after-change-major-mode-hook 'fci-mode)
+
+;; use only spaces, no tab charaters
+(setq-default indent-tabs-mode nil) 
+
+;; line number mode
+(global-linum-mode 1)
+(setq linum-format "%d ")
+
+;; map some files to their mode
+(add-to-list 'auto-mode-alist '("\\dot_emacs\\'" . emacs-lisp-mode))
+(add-to-list 'auto-mode-alist '("\\dot_bash_profile\\'" . shell-script-mode))
+
+;; Color theme
+(color-theme-gray30)
+
+;; Jedi
+(setq jedi:setup-keys t)
+(add-hook 'python-mode-hook 'jedi:setup)
+
+;; projectile
+(projectile-global-mode)
+(setq projectile-completion-system 'grizzl)
+(define-key projectile-mode-map [M-p] 'projectile-find-file)
