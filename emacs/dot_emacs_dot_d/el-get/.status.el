@@ -4,6 +4,8 @@
 	 (:name el-get :website "https://github.com/dimitri/el-get#readme" :description "Manage the external elisp bits and pieces you depend upon." :type github :branch "master" :pkgname "dimitri/el-get" :info "." :load "el-get.el"))
  (epl status "installed" recipe
       (:name epl :description "EPL provides a convenient high-level API for various package.el versions, and aims to overcome its most striking idiocies." :type github :pkgname "cask/epl"))
+ (pbcopy status "installed" recipe
+	 (:name pbcopy :description "An interface to OSX's pbcopy utility" :type github :pkgname "jkp/pbcopy.el" :features "pbcopy"))
  (pkg-info status "installed" recipe
 	   (:name pkg-info :description "Provide information about Emacs packages." :type github :pkgname "lunaryorn/pkg-info.el" :depends
 		  (dash epl)))

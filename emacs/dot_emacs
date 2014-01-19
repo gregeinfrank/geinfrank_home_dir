@@ -9,3 +9,51 @@
 
 (add-to-list 'el-get-recipe-path "~/.emacs.d/el-get-user/recipes")
 (el-get 'sync)
+
+
+;; Turns the menu off
+(menu-bar-mode nil)
+
+;; Turns the startup message off
+(setq inhibit-startup-message t)
+
+;; Don't wrap lines
+(set-default 'truncate-lines t)
+
+;; Refresh file
+(defun refresh-file ()
+  (interactive)
+  (revert-buffer t t t)
+  )
+(global-set-key [f9] 'refresh-file)
+
+;; shell stuff
+;; Maps up and down arrow in emacs shell mode to bring back previous commands
+(add-hook 'shell-mode-hook
+          '(lambda ()
+             (define-key shell-mode-map [up] 'comint-previous-input)
+             (define-key shell-mode-map [down] 'comint-next-input)
+             )
+          )
+(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on) ;;junk chars in shell
+
+;; move up/down 10 lines
+(global-set-key (kbd "M-n")
+    (lambda () (interactive) (next-line 10)))
+(global-set-key (kbd "M-p")
+    (lambda () (interactive) (next-line -10)))
+
+;; import ipdb; ipdb.set_trace()
+(fset 'trace
+   (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ("        import ipdb; ipdb.set_trace()" 0 "%d")) arg)))
+
+
+;; .us and .mustache template files should open in html mode
+(setq auto-mode-alist (cons '("\\.us$" . html-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.mustache$" . html-mode) auto-mode-alist))
+
+;; .less files should open in CSS mode
+(setq auto-mode-alist (cons '("\\.less$" . css-mode) auto-mode-alist))
+
+;; follow symlinks to version controlled files without confirmation
+(setq vc-follow-symlinks t)
