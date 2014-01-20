@@ -2,9 +2,8 @@
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
                          ("marmalade" . "http://marmalade-repo.org/packages/")
                          ("melpa" . "http://melpa.milkbox.net/packages/")))
-
-
-
+(setq package-enable-at-startup nil)
+    (package-initialize)
 
 ;; el-get
 (add-to-list 'load-path "~/.emacs.d/el-get/el-get")
@@ -90,6 +89,30 @@
 (add-hook 'python-mode-hook 'jedi:setup)
 
 ;; projectile
-;; (projectile-global-mode)
-;; (setq projectile-completion-system 'grizzl)
+(projectile-global-mode)
+(setq projectile-completion-system 'grizzl)
 ;; (define-key projectile-mode-map [M-p] 'projectile-find-file)
+
+
+;; flymake for python
+(when (load "flymake" t)
+  (defun flymake-pyflakes-init ()
+    (let* ((temp-file (flymake-init-create-temp-buffer-copy
+                       'flymake-create-temp-inplace))) ;; this might have to change to flymake-create-temp-copy if using tramp because it'll be mad slow
+    (list "~/.emacs.d/pycheckers.sh" (list temp-file))))
+  ;; only process python files
+  (add-to-list 'flymake-allowed-file-name-masks
+               '("\\.py\\'" flymake-pyflakes-init))
+)
+
+(add-hook 'find-file-hook 'flymake-find-file-hook)
+
+;; flymake
+(setq flymake-run-in-place nil)
+(setq temporary-file-directory "~/.emacs.d/tmp/")
+(setq flymake-log-level 3)
+
+;; flymake - underline errors/warnings rather than highlight
+(custom-set-faces
+ '(flymake-errline ((((class color)) (:underline "red"))))
+ '(flymake-warnline ((((class color) (background dark)) (:underline "yellow")))))
