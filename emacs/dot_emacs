@@ -104,6 +104,7 @@
                '("\\.py\\'" flymake-pyflakes-init))
 )
 (add-hook 'find-file-hook 'flymake-find-file-hook)
+(add-hook 'python-mode-hook 'flymake-mode)
 
 ;; highlight 80 characters on each line - pep8
 (setq fci-rule-width 1)
