@@ -13,6 +13,10 @@
 ;; Turns the menu off
 (menu-bar-mode -1)
 
+;; Nobody likes to have to type out the full yes or no when Emacs asks.
+;; Which it does quite often. Make it one character.
+(defalias 'yes-or-no-p 'y-or-n-p)
+
 ;; Turns the startup message off
 (setq inhibit-startup-message t)
 
@@ -127,3 +131,6 @@
 
 ;; pbcopy
 (turn-on-pbcopy)
+
+;; Magit
+(global-set-key (kbd "C-x g") 'magit-status)
