@@ -5,20 +5,8 @@
 (setq package-enable-at-startup nil)
     (package-initialize)
 
-;; el-get
-(add-to-list 'load-path "~/.emacs.d/el-get/el-get")
-(require 'el-get nil 'noerror)
-;(unless (require 'el-get nil 'noerror)
-;  (with-current-buffer
-;      (url-retrieve-synchronously
-;       "https://raw.github.com/dimitri/el-get/master/el-get-install.el")
-;    (goto-char (point-max))
-;    (eval-print-last-sexp)))
-(add-to-list 'el-get-recipe-path "~/.emacs.d/el-get-user/recipes")
-(el-get 'sync)
-
 ;; Turns the menu off
-(menu-bar-mode nil)
+(menu-bar-mode -1)
 
 ;; Turns the startup message off
 (setq inhibit-startup-message t)
@@ -31,7 +19,7 @@
   (interactive)
   (revert-buffer t t t)
   )
-(global-set-key [f9] 'refresh-file)
+(global-set-key (kbd "M-r") 'refresh-file)
 
 ;; shell stuff
 ;; Maps up and down arrow in emacs shell mode to bring back previous commands
@@ -76,13 +64,15 @@
 ;; line number mode
 (global-linum-mode 1)
 (setq linum-format "%d ")
+(setq linum-format "%3d ")
 
 ;; map some files to their mode
 (add-to-list 'auto-mode-alist '("\\dot_emacs\\'" . emacs-lisp-mode))
 (add-to-list 'auto-mode-alist '("\\dot_bash_profile\\'" . shell-script-mode))
 
 ;; Color theme
-(color-theme-gray30)
+;;(color-theme-gray30)
+(load-theme 'wombat t)
 
 ;; Jedi
 (setq jedi:setup-keys t)
