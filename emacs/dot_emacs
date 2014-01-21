@@ -3,7 +3,12 @@
                          ("marmalade" . "http://marmalade-repo.org/packages/")
                          ("melpa" . "http://melpa.milkbox.net/packages/")))
 (setq package-enable-at-startup nil)
-    (package-initialize)
+(package-initialize)
+
+;; Enable fuzzy find
+(autoload 'ido "ido" t)
+(ido-mode t)
+(setq ido-enable-flex-matching t)
 
 ;; Turns the menu off
 (menu-bar-mode -1)
@@ -31,6 +36,12 @@
           )
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on) ;;junk chars in shell
 
+;; mouse support in osx terminal
+(require 'mouse)
+(xterm-mouse-mode t)
+(defun track-mouse (e)) 
+(setq mouse-sel-mode t)
+
 ;; move up/down 10 lines
 (global-set-key (kbd "M-n")
     (lambda () (interactive) (next-line 10)))
@@ -40,7 +51,6 @@
 ;; import ipdb; ipdb.set_trace()
 (fset 'trace
    (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ("        import ipdb; ipdb.set_trace()" 0 "%d")) arg)))
-
 
 ;; .us and .mustache template files should open in html mode
 (setq auto-mode-alist (cons '("\\.us$" . html-mode) auto-mode-alist))
@@ -63,7 +73,6 @@
 
 ;; line number mode
 (global-linum-mode 1)
-(setq linum-format "%d ")
 (setq linum-format "%3d ")
 
 ;; map some files to their mode
@@ -94,8 +103,13 @@
   (add-to-list 'flymake-allowed-file-name-masks
                '("\\.py\\'" flymake-pyflakes-init))
 )
-
 (add-hook 'find-file-hook 'flymake-find-file-hook)
+
+;; highlight 80 characters on each line - pep8
+(setq fci-rule-width 1)
+(setq fci-rule-color "#dddddd")
+(setq-default fci-rule-column 80)
+(add-hook 'python-mode-hook 'fci-mode)
 
 ;; flymake
 (setq flymake-run-in-place nil)
@@ -106,3 +120,6 @@
 (custom-set-faces
  '(flymake-errline ((((class color)) (:underline "red"))))
  '(flymake-warnline ((((class color) (background dark)) (:underline "yellow")))))
+
+;; Paren matching
+(show-paren-mode 1)
