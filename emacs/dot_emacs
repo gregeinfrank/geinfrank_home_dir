@@ -123,3 +123,6 @@
 
 ;; Paren matching
 (show-paren-mode 1)
+
+;; pbcopy
+(turn-on-pbcopy)
