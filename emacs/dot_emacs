@@ -93,7 +93,8 @@
 
 ;; projectile
 (projectile-global-mode)
-(setq projectile-completion-system 'grizzl)
+(setq projectile-completion-system 'ido)
+;(setq projectile-completion-system 'grizzl)
 ;; (define-key projectile-mode-map [M-p] 'projectile-find-file)
 
 
@@ -109,6 +110,17 @@
 )
 (add-hook 'find-file-hook 'flymake-find-file-hook)
 (add-hook 'python-mode-hook 'flymake-mode)
+
+;; Only evaluate flymake on save
+(eval-after-load "flymake"
+  '(progn
+     (defun flymake-after-change-function (start stop len)
+       "Start syntax check for current buffer if it isn't already running."
+       ;; Do nothing, don't want to run checks until I save.
+       )))
+
+;; Javascript - set indent to two spaces
+(setq js-indent-level 2)
 
 ;; highlight 80 characters on each line - pep8
 (setq fci-rule-width 1)
@@ -134,3 +146,6 @@
 
 ;; Magit
 (global-set-key (kbd "C-x g") 'magit-status)
+
+;; Toggle comment-region
+(global-set-key (kbd "C-c C-;") 'comment-or-uncomment-region)
