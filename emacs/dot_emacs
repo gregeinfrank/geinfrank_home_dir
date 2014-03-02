@@ -97,19 +97,31 @@
 ;(setq projectile-completion-system 'grizzl)
 ;; (define-key projectile-mode-map [M-p] 'projectile-find-file)
 
-
 ;; flymake for python
+;; (when (load "flymake" t)
+;;   (defun flymake-pyflakes-init ()
+;;     (let* ((temp-file (flymake-init-create-temp-buffer-copy
+;;                        'flymake-create-temp-inplace))) ;; this might have to change to flymake-create-temp-copy if using tramp because it'll be mad slow
+;;     (list "~/.emacs.d/pycheckers.sh" (list temp-file))))
+;;   ;; only process python files
+;;   (add-to-list 'flymake-allowed-file-name-masks
+;;                '("\\.py\\'" flymake-pyflakes-init))
+;; )
+
 (when (load "flymake" t)
   (defun flymake-pyflakes-init ()
     (let* ((temp-file (flymake-init-create-temp-buffer-copy
-                       'flymake-create-temp-inplace))) ;; this might have to change to flymake-create-temp-copy if using tramp because it'll be mad slow
-    (list "~/.emacs.d/pycheckers.sh" (list temp-file))))
-  ;; only process python files
+                       'flymake-create-temp-inplace))
+           (local-file (file-relative-name
+                        temp-file
+                        (file-name-directory buffer-file-name))))
+      (list "~/.emacs.d/pyflakespep8.py" (list local-file))))
   (add-to-list 'flymake-allowed-file-name-masks
-               '("\\.py\\'" flymake-pyflakes-init))
-)
+               '("\\.py\\'" flymake-pyflakes-init)))
 (add-hook 'find-file-hook 'flymake-find-file-hook)
 (add-hook 'python-mode-hook 'flymake-mode)
+(add-hook 'js-mode-hook 'flymake-jshint-load)
+(setq jshint-configuration-path "~/.emacs.d/jshint-config.json")
 
 ;; Only evaluate flymake on save
 (eval-after-load "flymake"
@@ -129,14 +141,14 @@
 (add-hook 'python-mode-hook 'fci-mode)
 
 ;; flymake
-(setq flymake-run-in-place nil)
-(setq temporary-file-directory "~/.emacs.d/tmp/")
-(setq flymake-log-level 3)
+;; (setq flymake-run-in-place nil)
+;; (setq temporary-file-directory "~/.emacs.d/tmp/")
+;; (setq flymake-log-level 3)
 
 ;; flymake - underline errors/warnings rather than highlight
-(custom-set-faces
- '(flymake-errline ((((class color)) (:underline "red"))))
- '(flymake-warnline ((((class color) (background dark)) (:underline "yellow")))))
+;; (custom-set-faces
+;;  '(flymake-errline ((((class color)) (:underline "red"))))
+;;  '(flymake-warnline ((((class color) (background dark)) (:underline "yellow")))))
 
 ;; Paren matching
 (show-paren-mode 1)
@@ -148,4 +160,4 @@
 (global-set-key (kbd "C-x g") 'magit-status)
 
 ;; Toggle comment-region
-(global-set-key (kbd "C-c C-;") 'comment-or-uncomment-region)
+(global-set-key (kbd "C-x ;") 'comment-or-uncomment-region)
