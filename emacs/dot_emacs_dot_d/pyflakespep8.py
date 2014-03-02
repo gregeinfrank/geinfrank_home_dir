@@ -36,5 +36,5 @@ def run(cmd, ignore_re, warning_re):
 
 run('pyflakes %s' % sys.argv[1], pyflakes_ignore, pyflakes_warning)
 print '## pyflakes above, pep8 below ##'
-pep8_ignore = ' '.join('--ignore=%s' % i for i in pep8_ignore)
+pep8_ignore = '--ignore=%s' % ','.join(pep8_ignore)
 run('pep8 %s --repeat %s' % (pep8_ignore, sys.argv[1]), None, pep8_warning)
