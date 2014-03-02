@@ -6,3 +6,9 @@ Might have to run
 sudo pip install jedi
 sudo pip install epc
 sudo pip install argparse ( maybe )
+
+
+for jshint:
+# make sure npm is installed
+brew install npm
+npm install jshint
